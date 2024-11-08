@@ -92,11 +92,33 @@ export class RBTree {
         if (nodo?.getRightChild() !== this.leaf)
             this.printNode(nodo.getRightChild());
     }
-
+    
+    private inordenTraversal(nodoActual: NodeRBT): void{
+      if (nodoActual != this.leaf){
+        this.inordenTraversal(nodoActual.getLeftChild())
+        console.log(nodoActual.getData() + "(" + nodoActual.getColor() + ")")
+        this.inordenTraversal(nodoActual.getRightChild())
+      }  
+    }
+    
+    public inorden(): void{
+      return this.inordenTraversal(this.root)
+    }
     public printAll(): void {
         this.printNode(this.root);
     }
-
+  
+    private searchNode(nodoActual: NodeRBT, buscado: number): void | string{
+      if (nodoActual != this.leaf){
+        if (nodoActual.getData() == buscado)
+          return String(nodoActual.getData()) + "(" + String(nodoActual.getColor()) + ")"
+        else if (buscado > nodoActual.getData())
+          return this.searchNode(nodoActual.getRightChild(), buscado)
+        else if (buscado < nodoActual.getData())
+          return this.searchNode(nodoActual.getLeftChild(), buscado)
+      }
+      return "-1"
+    }
     public insert(data: number): void {
         // Inserción normal de BST
         let newNode: NodeRBT = new NodeRBT(data);
@@ -132,5 +154,8 @@ export class RBTree {
             return;
         // corregir inserción
         this.fixInsert(newNode);
+    }
+    public search(buscado: number):void | string{
+      return this.searchNode(this.root, buscado);
     }
 }
